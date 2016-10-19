@@ -1,0 +1,19 @@
+﻿body {
+}
+
+table {
+    border-spacing: 15px;
+    margin: 10px;
+    width: 100%;
+}
+
+table, th, td {
+    text-align: left;
+    padding: 2px;
+    margin:5px;
+}
+
+textarea {
+    width: 100%;
+    runat:"server"
+}

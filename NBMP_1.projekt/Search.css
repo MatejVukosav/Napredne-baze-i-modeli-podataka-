@@ -1,0 +1,32 @@
+﻿body {
+    background-color: lightblue;
+}
+
+
+#container {
+    font-size: 0;
+    overflow: hidden;
+}
+
+#left, #right {
+    display: inline-table;
+    *display: inline;
+    zoom: 1;
+    vertical-align: text-top;
+    font-size: 12px;
+}
+
+#left {
+    width: 50%;
+}
+
+
+#right {
+    width: 50%;
+}
+
+textarea {
+    width: 100%;
+}
+
+
