@@ -1,61 +1,90 @@
 ﻿<%@ Page Title="Analisys" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Analisys.aspx.cs" Inherits="NBMP_1.projekt.Analisys" %>
 
-<asp:content id="BodyContent" contentplaceholderid="MainContent" runat="server">
-    <link rel="stylesheet" type="text/css" href="Search.css" runat="server"/> 
+<asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
+    <link rel="stylesheet" type="text/css" href="Search.css" runat="server" />
+    <link rel="stylesheet" type="text/css" href="Table.css" runat="server" />
     <h2><%: Title %>.</h2>
     <h3>Analisys of given text</h3>
-    
 
-    <div class="well">
-  <div id="datetimepicker1" class="input-append date">
-    <input data-format="dd/MM/yyyy hh:mm:ss" type="text"></input>
-    <span class="add-on">
-    <i data-time-icon="icon-time" data-date-icon="icon-calendar">
-    </i>
-    </span>
-    </div>
-    </div>
-    <script type="text/javascript">
-        $(function () {
-            $('#datetimepicker1').datetimepicker({
-                language: 'pt-BR'
+
+
+    <!doctype html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>jQuery UI Datepicker - Default functionality</title>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <link rel="stylesheet" href="/resources/demos/style.css">
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+        <script>
+            $(function () {
+                $("#date_from").datepicker();
+                $("#date_to").datepicker();
+
+
+
             });
-        });
-    </script>
+        </script>
+    </head>
+    <body>
+        <table style="">
+            <tr>
+                <th></th>
+                <td>
+                    <label>Search by date</label>
+                </td>
+            </tr>
+            <tr>
+                <th>Date from:</th>
+                <td>
+                    <input type="text" id="date_from" runat="server">
+                </td>
+            </tr>
+            <tr>
+                <th>Date to:</th>
+                <td>
+                    <input type="text" id="date_to" runat="server">
+                </td>
+            </tr>
 
-    <!DOCTYPE HTML>
-<html>
-  <head>
-    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" media="screen"
-     href="http://tarruda.github.com/bootstrap-datetimepicker/assets/css/bootstrap-datetimepicker.min.css">
-  </head>
-  <body>
-    <div id="datetimepicker" class="input-append date">
-      <input type="text"></input>
-      <span class="add-on">
-        <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
-      </span>
+
+            <tr>
+                <th>Choose search option:</th>
+
+                <td>
+                    <asp:RadioButtonList ID="RadioButtonChooseQueriesSearch" runat="server">
+                        <asp:ListItem Selected="True" Value="days">by days</asp:ListItem>
+                        <asp:ListItem Value="hours">by hours</asp:ListItem>
+                    </asp:RadioButtonList>
+                </td>
+            </tr>
+
+            <tr>
+                <th>
+                    <asp:Button
+                        ID="search_queries"
+                        Text="Search"
+                        OnClick="search_queries_btn_Click"
+                        runat="server" />
+
+                </th>
+                <td></td>
+            </tr>
+        </table>
+
+    </body>
+    </html>
+
+    <div style="display: table; vertical-align: middle">
+        <asp:Label ID="search_queries_result" runat="server">
+        </asp:Label>
     </div>
-    <script type="text/javascript"
-     src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.8.3/jquery.min.js">
-    </script> 
-    <script type="text/javascript"
-     src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js">
-    </script>
-    <script type="text/javascript"
-     src="http://tarruda.github.com/bootstrap-datetimepicker/assets/js/bootstrap-datetimepicker.min.js">
-    </script>
-    <script type="text/javascript"
-     src="http://tarruda.github.com/bootstrap-datetimepicker/assets/js/bootstrap-datetimepicker.pt-BR.js">
-    </script>
-    <script type="text/javascript">
-      $('#datetimepicker').datetimepicker({
-        format: 'dd/MM/yyyy hh:mm:ss',
-        language: 'en'
-      });
-    </script>
-  </body>
-<html>
 
-</asp:content>
+
+    
+ 
+</asp:Content>

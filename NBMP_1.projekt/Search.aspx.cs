@@ -32,28 +32,35 @@ namespace NBMP_1.projekt
                     cmd.Connection = conn;
 
                     string searchQueryWithOperators = "";
-                    char[] delimiterChars = { ' ', '"' };
+                    char[] delimiterChars = { ' ' };
                     string[] separatedData = inputQuery.Split(delimiterChars);
+                    string operatorInput = "";
                     if (selectedOperator.Equals("and"))
                     {
-
+                        int skipFirst = 0;
+                        operatorInput = "AND";
                         foreach (string s in separatedData)
                         {
-                            if (separatedData.Length > 1)
+
+                            if (!string.IsNullOrWhiteSpace(s) && skipFirst > 0 && separatedData.Length > 1)
                             {
-                                searchQueryWithOperators = string.Concat(searchQueryWithOperators, "&");
+                                searchQueryWithOperators = string.Concat(searchQueryWithOperators, " & ");
                             }
+                            skipFirst++;
                             searchQueryWithOperators = string.Concat(searchQueryWithOperators, s);
                         }
                     }
                     else if (selectedOperator.Equals("or"))
                     {
+                        int skipFirst = 0;
+                        operatorInput = "OR";
                         foreach (string s in separatedData)
                         {
-                            if (separatedData.Length > 1)
+                            if (!string.IsNullOrWhiteSpace(s) && skipFirst > 0 && separatedData.Length > 1)
                             {
-                                searchQueryWithOperators = string.Concat(searchQueryWithOperators, "|");
+                                searchQueryWithOperators = string.Concat(searchQueryWithOperators, " | ");
                             }
+                            skipFirst++;
                             searchQueryWithOperators = string.Concat(searchQueryWithOperators, s);
                         }
                     }
@@ -64,23 +71,34 @@ namespace NBMP_1.projekt
                     if (selectedMethod.Equals("morphology_&_semantic"))
                     {
 
-                        query = "SELECT " +
-"ts_headline(title, to_tsquery('english', (:searchQueryWithOperators ))), " +
-"title , " +
-"ts_rank(setWeight(to_tsvector(title), 'A'), to_tsquery('english', (:searchQueryWithOperators))) AS rank " +
-"FROM texttable " +
-"WHERE to_tsvector(title) @@ to_tsquery('english', :searchQueryWithOperators) " +
-"AND to_tsvector(title) @@ to_tsquery('english', :searchQueryWithOperators) " +
-"ORDER BY rank DESC";
+                        query = "SELECT " + "id ," +
+                        "ts_headline(title, to_tsquery('english', ('" + searchQueryWithOperators + "'))), " +
+                        "title , " +
+                            "(ts_rank(setWeight(to_tsvector(title), 'A'), to_tsquery('english', ('" + searchQueryWithOperators + "'))) +" +
+                            "ts_rank(setWeight(to_tsvector(body), 'D'), to_tsquery('english', ('" + searchQueryWithOperators + "'))) +" +
+                            "ts_rank(setWeight(to_tsvector(summary), 'C'), to_tsquery('english', ('" + searchQueryWithOperators + "'))) +" +
+                            "ts_rank(setWeight(to_tsvector(keywords), 'B'), to_tsquery('english', ('" + searchQueryWithOperators + "'))) " +
+                                   ") / 4 as rank " +
+                        "FROM texttable " +
+                        "WHERE   titletsv @@ to_tsquery('english', '" + searchQueryWithOperators + "') " + operatorInput + " " +
+                                "titletsv @@ to_tsquery('english', '" + searchQueryWithOperators + "') " + operatorInput + " " +
+                                "bodytsv @@ to_tsquery('english', '" + searchQueryWithOperators + "') " + operatorInput + " " +
+                                "bodytsv @@ to_tsquery('english', '" + searchQueryWithOperators + "') " + operatorInput + " " +
+                                "summarytsv @@ to_tsquery('english', '" + searchQueryWithOperators + "') " + operatorInput + " " +
+                                "summarytsv @@ to_tsquery('english', '" + searchQueryWithOperators + "') " + operatorInput + " " +
+                                "keywordstsv @@ to_tsquery('english', '" + searchQueryWithOperators + "') " + operatorInput + " " +
+                                "keywordstsv @@ to_tsquery('english', '" + searchQueryWithOperators + "') " +
+                        "ORDER BY rank DESC";
 
                     }
                     else if (selectedMethod.Equals("fuzzy_string_matching"))
                     {
-
+                        query = "SELECT id, ts_headline(title, to_tsquery('english', 'ma')), title, " +
+                                "similarity(title, 'ma') AS st, similarity(body,'ma') AS sb, similarity(keywords,'ma') AS sk, similarity(summary,'ma') AS ss " +
+                                "FROM texttable " +
+                                "where(similarity(title, 'ma') + similarity(body, 'ma') + similarity(keywords, 'ma') + similarity(summary, 'ma')) / 4 > 0.2 " +
+                                "ORDER BY title DESC";
                     }
-
-
-
                     cmd.CommandText = query;
                     search_query_textarea.Value = query;
 
@@ -88,6 +106,7 @@ namespace NBMP_1.projekt
                     int numOfElements = 0;
                     using (NpgsqlDataReader reader = cmd.ExecuteReader())
                     {
+
                         while (reader.Read())
                         {
                             String element = reader.GetString(0);
@@ -100,7 +119,7 @@ namespace NBMP_1.projekt
                     }
 
                     num_of_search_items.Text = numOfElements.ToString();
-                    search_result.Text = sb.ToString().Replace(Environment.NewLine, "<br />"); ;
+                    search_result.Text = sb.ToString().Replace(Environment.NewLine, "<br />");
 
                     //DODAJ ZAPIS U QUERY TABLICU
 
@@ -114,9 +133,8 @@ namespace NBMP_1.projekt
 
         private void saveQueryToDatabase(string query, NpgsqlCommand cmd)
         {
-            int date = Int32.Parse(DateTime.Now.ToString("yyyyMd"));
+            DateTime date = DateTime.Now;
             int hour = Int32.Parse(DateTime.Now.ToString("hh"));
-
 
             cmd.Parameters.Add(new NpgsqlParameter("query", query));
             cmd.Parameters.Add(new NpgsqlParameter("date", date));

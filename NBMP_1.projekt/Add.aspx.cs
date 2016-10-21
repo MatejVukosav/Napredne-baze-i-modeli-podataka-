@@ -34,7 +34,7 @@ namespace NBMP_1.projekt
             using (var conn = new NpgsqlConnection("Host=127.0.0.1;Username=postgres;Password=root1;Database=NMBP_1_projekt"))
             {
                 conn.Open();
-                using (var cmd = new NpgsqlCommand())
+                using (NpgsqlCommand cmd = new NpgsqlCommand())
                 {
                     cmd.Connection = conn;
 
@@ -47,23 +47,6 @@ namespace NBMP_1.projekt
                      cmd.CommandText = insertString;
                      cmd.ExecuteNonQuery();
 
-                //    String query = "SELECT * FROM text";
-
-                //    // Retrieve all rows
-                //    cmd.CommandText = query;
-                //    String data = "";
-                //    using (NpgsqlDataReader reader = cmd.ExecuteReader())
-                //    {
-                //        while (reader.Read())
-                //        {
-                //            String element = reader.GetString(0);
-                //            Console.WriteLine(element);
-                //            data = string.Concat(data, element);
-                //        }
-
-                //        reader.Close();
-                //    }
-                //    add_body.Value = data;
                 }
             }
 
