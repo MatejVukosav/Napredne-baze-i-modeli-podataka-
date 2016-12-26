@@ -79,12 +79,8 @@
     </body>
     </html>
 
-    <div style="display: table; vertical-align: middle">
-        <asp:Label ID="search_queries_result" runat="server">
-        </asp:Label>
-    </div>
+    <asp:Table ID="tablePrikaz" runat="server">
+    </asp:Table>
 
 
-    
- 
 </asp:Content>

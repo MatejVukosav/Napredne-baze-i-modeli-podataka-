@@ -68,12 +68,14 @@ namespace NBMP_1.projekt
                     cmd.Parameters.Add(new NpgsqlParameter("searchQueryWithOperators", searchQueryWithOperators));
                     cmd.Parameters.Add(new NpgsqlParameter("selectedMethod", selectedMethod));
                     String query = "";
-                    if (selectedMethod.Equals("morphology_&_semantic"))
+                    bool isMorphology = selectedMethod.Equals("morphology_&_semantic");
+                    bool isFuzzy = selectedMethod.Equals("fuzzy_string_matching");
+                    if (isMorphology)
                     {
 
                         query = "SELECT " + "id ," +
                         "ts_headline(title, to_tsquery('english', ('" + searchQueryWithOperators + "'))), " +
-                        "title , " +
+                     
                             "(ts_rank(setWeight(to_tsvector(title), 'A'), to_tsquery('english', ('" + searchQueryWithOperators + "'))) +" +
                             "ts_rank(setWeight(to_tsvector(body), 'D'), to_tsquery('english', ('" + searchQueryWithOperators + "'))) +" +
                             "ts_rank(setWeight(to_tsvector(summary), 'C'), to_tsquery('english', ('" + searchQueryWithOperators + "'))) +" +
@@ -91,12 +93,12 @@ namespace NBMP_1.projekt
                         "ORDER BY rank DESC";
 
                     }
-                    else if (selectedMethod.Equals("fuzzy_string_matching"))
+                    else if (isFuzzy)
                     {
-                        query = "SELECT id, ts_headline(title, to_tsquery('english', 'ma')), title, " +
-                                "similarity(title, 'ma') AS st, similarity(body,'ma') AS sb, similarity(keywords,'ma') AS sk, similarity(summary,'ma') AS ss " +
+                        query = "SELECT id, ts_headline(title, to_tsquery('english', '" + searchQueryWithOperators + "')), " +
+                                "(similarity(title, '" + searchQueryWithOperators + "') + similarity(body, '" + searchQueryWithOperators + "') + similarity(keywords, '" + searchQueryWithOperators + "') + similarity(summary, '" + searchQueryWithOperators + "')) / 4 as similarity "+
                                 "FROM texttable " +
-                                "where(similarity(title, 'ma') + similarity(body, 'ma') + similarity(keywords, 'ma') + similarity(summary, 'ma')) / 4 > 0.2 " +
+                                "where(similarity(title, '" + searchQueryWithOperators + "') + similarity(body, '" + searchQueryWithOperators + "') + similarity(keywords, '" + searchQueryWithOperators + "') + similarity(summary, '" + searchQueryWithOperators + "')) / 4 > 0.2 " +
                                 "ORDER BY title DESC";
                     }
                     cmd.CommandText = query;
@@ -106,23 +108,79 @@ namespace NBMP_1.projekt
                     int numOfElements = 0;
                     using (NpgsqlDataReader reader = cmd.ExecuteReader())
                     {
-
-                        while (reader.Read())
+                        //Prikaz naslova kolone
+                        TableRow columnRow = new TableRow();
+                        tablePrikaz.Rows.Add(columnRow);
+                        if (isMorphology)
                         {
-                            String element = reader.GetString(0);
-                            Console.WriteLine(element);
-                            sb.AppendLine(element);
+                            TableCell columnCell = new TableCell();
+                            columnCell.Text = "query";
+                            columnRow.Cells.Add(columnCell);
+
+                            columnCell = new TableCell();
+                            columnCell.Text = "headline";
+                            columnRow.Cells.Add(columnCell);
+
+                            columnCell = new TableCell();
+                            columnCell.Text = "rank";
+                            columnRow.Cells.Add(columnCell);
+                        }
+                        else if (isFuzzy)
+                        {
+                            TableCell columnCell = new TableCell();
+                            columnCell.Text = "query";
+                            columnRow.Cells.Add(columnCell);
+
+                            columnCell = new TableCell();
+                            columnCell.Text = "headline";
+                            columnRow.Cells.Add(columnCell);
+
+                            columnCell = new TableCell();
+                            columnCell.Text = "similarity";
+                            columnRow.Cells.Add(columnCell);
+                        }
+                        //Prikaz podataka
+                        while (reader.Read())
+                        {      
                             numOfElements++;
+
+                            TableCell dataCell = new TableCell();
+                            TableRow dataRow = new TableRow();
+                            tablePrikaz.Rows.Add(dataRow);
+
+                            for (int i = 0; i < 3; i++)
+                            {
+                                String column = "";
+                                if (reader.IsDBNull(i))
+                                {
+                                    column += "0";
+                                }
+                                else
+                                {
+                                    //ako je rank ili similarity broj, tj double
+                                    if (i == 2)
+                                    {
+                                        column += reader.GetDouble(i).ToString();
+                                    }
+                                    else
+                                    {
+                                        column += reader.GetString(i);
+                                    }
+                                }
+                                dataCell = new TableCell();
+                                dataCell.Text = column;
+                                dataRow.Cells.Add(dataCell);
+                            }
+
+
                         }
 
                         reader.Close();
                     }
 
                     num_of_search_items.Text = numOfElements.ToString();
-                    search_result.Text = sb.ToString().Replace(Environment.NewLine, "<br />");
-
+                 
                     //DODAJ ZAPIS U QUERY TABLICU
-
                     saveQueryToDatabase(searchQueryWithOperators, cmd);
 
 
@@ -134,7 +192,7 @@ namespace NBMP_1.projekt
         private void saveQueryToDatabase(string query, NpgsqlCommand cmd)
         {
             DateTime date = DateTime.Now;
-            int hour = Int32.Parse(DateTime.Now.ToString("hh"));
+            int hour = Int32.Parse(DateTime.Now.ToString("HH"));
 
             cmd.Parameters.Add(new NpgsqlParameter("query", query));
             cmd.Parameters.Add(new NpgsqlParameter("date", date));

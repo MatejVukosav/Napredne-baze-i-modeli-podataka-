@@ -67,6 +67,15 @@ namespace NBMP_1.projekt {
         protected global::System.Web.UI.WebControls.Label num_of_search_items;
         
         /// <summary>
+        /// tablePrikaz control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Table tablePrikaz;
+        
+        /// <summary>
         /// search_result control.
         /// </summary>
         /// <remarks>

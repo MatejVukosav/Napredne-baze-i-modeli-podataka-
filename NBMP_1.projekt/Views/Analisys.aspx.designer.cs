@@ -49,12 +49,12 @@ namespace NBMP_1.projekt {
         protected global::System.Web.UI.WebControls.Button search_queries;
         
         /// <summary>
-        /// search_queries_result control.
+        /// tablePrikaz control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label search_queries_result;
+        protected global::System.Web.UI.WebControls.Table tablePrikaz;
     }
 }

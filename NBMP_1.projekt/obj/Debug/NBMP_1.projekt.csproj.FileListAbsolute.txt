@@ -141,3 +141,10 @@ C:\Users\mvukosav\Documents\Visual Studio 2015\Projects\NBMP_1.projekt\NBMP_1.pr
 C:\Users\mvukosav\Documents\Visual Studio 2015\Projects\NBMP_1.projekt\NBMP_1.projekt\bin\System.Data.SQLite.EF6.dll
 C:\Users\mvukosav\Documents\Visual Studio 2015\Projects\NBMP_1.projekt\NBMP_1.projekt\bin\System.Data.SQLite.Linq.dll
 C:\Users\mvukosav\Documents\Visual Studio 2015\Projects\NBMP_1.projekt\NBMP_1.projekt\bin\System.Data.SQLite.xml
+C:\Users\mvukosav\Documents\Visual Studio 2015\Projects\NBMP_1.projekt\NBMP_1.projekt\bin\MongoDB.Bson.dll
+C:\Users\mvukosav\Documents\Visual Studio 2015\Projects\NBMP_1.projekt\NBMP_1.projekt\bin\MongoDB.Driver.Core.dll
+C:\Users\mvukosav\Documents\Visual Studio 2015\Projects\NBMP_1.projekt\NBMP_1.projekt\bin\MongoDB.Driver.dll
+C:\Users\mvukosav\Documents\Visual Studio 2015\Projects\NBMP_1.projekt\NBMP_1.projekt\bin\System.Runtime.InteropServices.RuntimeInformation.dll
+C:\Users\mvukosav\Documents\Visual Studio 2015\Projects\NBMP_1.projekt\NBMP_1.projekt\bin\MongoDB.Bson.xml
+C:\Users\mvukosav\Documents\Visual Studio 2015\Projects\NBMP_1.projekt\NBMP_1.projekt\bin\MongoDB.Driver.xml
+C:\Users\mvukosav\Documents\Visual Studio 2015\Projects\NBMP_1.projekt\NBMP_1.projekt\bin\MongoDB.Driver.Core.xml

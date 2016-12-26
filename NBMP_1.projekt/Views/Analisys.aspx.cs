@@ -43,67 +43,107 @@ namespace NBMP_1.projekt
 
                     cmd.CommandType = CommandType.Text;
                     String query = "";
-                    if (selectedValue.Equals("days"))
+                    bool isDays = selectedValue.Equals("days");
+                    bool isHours = selectedValue.Equals("hours");
+                    if (isDays)
                     {
                         query = @getQuerySqlByDays(dateFrom, dateTo);
                     }
-                    else if (selectedValue.Equals("hours"))
+                    else if (isHours)
                     {
-                        query = getQuerySqlByDays(dateFrom, dateTo);
+                        query = getQuerySqlByTime(dateFrom, dateTo);
                     }
 
                     if (!string.IsNullOrEmpty(query))
                     {
                         cmd.CommandText = query;
-                        StringBuilder sb = new StringBuilder();
-                        //iznad je sve oke
-
-                        DataTable dt = new DataTable();
-                        NpgsqlDataAdapter ad = new NpgsqlDataAdapter(cmd);
-                        ad.Fill(dt);
-                        NpgsqlDataReader dRead = cmd.ExecuteReader();
-                        try
-                        {
-                            Console.WriteLine("Contents of table in database: \n");
-                            while (dRead.Read())
-                            {
-                                foreach (DataRow row in dt.Rows)
-                                {
-                                    for (int i = 0; i < dt.Columns.Count; i++)
-                                    {
-                                        System.Diagnostics.Debug.WriteLine("{0} \t \n", row[i].ToString());
-                                        sb.AppendLine(row[i].ToString());
-                                    }
-                                }
-                            }
-                        }
-                        catch (NpgsqlException ne)
-                        {
-                            Console.WriteLine("Problem connecting to server, Error details {0}", ne.ToString());
-                        }
-                        finally
-                        {
-                            search_queries_result.Text = sb.ToString();
-                            Console.WriteLine("Closing connections");
-                            dRead.Close();
-                        }
-
-
-
-                        //ovo je oke
                         using (NpgsqlDataReader reader = cmd.ExecuteReader())
                         {
-                            while (reader.Read())
+                            TableRow columnRow = new TableRow();
+                            tablePrikaz.Rows.Add(columnRow);
+                            if (isDays)
                             {
-                              
-                                String element = reader.GetString(0);
-                                Console.WriteLine(element);
-                                sb.AppendLine(element);
+                            
+                                TableCell columnCell = new TableCell();
+                                columnCell.Text="query";
+                                columnRow.Cells.Add(columnCell);
+
+                                for (int i = 1; i < 32; i++)
+                                {
+                                    columnCell = new TableCell();
+                                    columnCell.Text = "d"+i;
+                                    columnRow.Cells.Add(columnCell);
+                                }
+                            }else
+                            {
+                                String columnNames = "\t\t";
+                                columnNames += "query";
+                                TableCell columnCell = new TableCell();
+                                columnCell.Text = columnNames;
+                                columnRow.Cells.Add(columnCell);
+                                for (int i = 1; i < 25; i++)
+                                {
+                                    columnCell = new TableCell();
+                                    columnCell.Text = "h" + i;
+                                    columnRow.Cells.Add(columnCell);
+                                }
+                            }
+
+
+                                while (reader.Read())
+                            {
+       
+                                if (isDays)
+                                {
+                                    TableCell dataCell = new TableCell();
+                                    TableRow dataRow = new TableRow();
+                                    tablePrikaz.Rows.Add(dataRow);                                                  
+
+                                    for (int i = 0; i < 32; i++)
+                                    {
+                                        String column = "";
+                                        if (reader.IsDBNull(i))
+                                        {
+                                            column += "0";
+                                        }
+                                        else
+                                        {
+                                            column += reader.GetString(i);
+                                        }
+                                        dataCell = new TableCell();
+                                        dataCell.Text = column;
+                                        dataRow.Cells.Add(dataCell); 
+                                    }             
+                                }
+                                else
+                                {
+
+                                    TableCell dataCell = new TableCell();
+                                    TableRow dataRow = new TableRow();
+                                    tablePrikaz.Rows.Add(dataRow);
+                               
+                                    for (int i = 0; i < 25; i++)
+                                    {
+                                        String column = "";
+                                        if (reader.IsDBNull(i))
+                                        {
+                                            column += "0";
+                                        }
+                                        else
+                                        {
+                                            column += reader.GetString(i);
+                                        }
+                                        dataCell = new TableCell();
+                                        dataCell.Text = column;
+                                        dataRow.Cells.Add(dataCell);
+                                    }
+                                }
+              
+
                             }
 
                             reader.Close();
-                        }
-                      //  search_queries_result.Text = sb.ToString().Replace(Environment.NewLine, "<br />");
+                        }              
                     }
 
                 }

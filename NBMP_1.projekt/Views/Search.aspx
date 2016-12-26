@@ -48,6 +48,10 @@
     <asp:Label runat="server"> Number od documents retrieved:</asp:Label>
     <asp:Label ID="num_of_search_items" runat="server">0</asp:Label>
 
+     <asp:Table ID="tablePrikaz" runat="server">
+    </asp:Table>
+
+
     <div style="display: table; vertical-align: middle">
         <asp:Label ID="search_result" runat="server">
         </asp:Label>

@@ -353,6 +353,8 @@ a:focus {
 
 img {
   vertical-align: middle;
+    height: 161px;
+    width: 357px;
 }
 
 .img-responsive {
@@ -1407,6 +1409,7 @@ pre code {
 table {
   max-width: 100%;
   background-color: transparent;
+    margin-top: 0px;
 }
 
 th {
