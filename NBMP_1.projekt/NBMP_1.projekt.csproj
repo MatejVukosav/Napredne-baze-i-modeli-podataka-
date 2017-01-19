@@ -330,7 +330,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Mongo\MongoPage.aspx" />
     <Content Include="StyleSheet1.css" />
     <Content Include="Views\Analisys.aspx" />
     <Content Include="Views\Add.aspx" />
@@ -402,16 +401,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
-    <Compile Include="Controllers\MongoPageController.cs" />
-    <Compile Include="Mongo\MongoConfig.cs" />
-    <Compile Include="Mongo\MongoPage.aspx.cs">
-      <DependentUpon>MongoPage.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Mongo\MongoPage.aspx.designer.cs">
-      <DependentUpon>MongoPage.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Mongo\News.cs" />
     <Compile Include="Views\Analisys.aspx.cs">
       <DependentUpon>Analisys.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -475,7 +464,7 @@
   <ItemGroup>
     <Folder Include="App_Code\" />
     <Folder Include="App_Data\" />
-    <Folder Include="Views\MongoPage\" />
+    <Folder Include="Controllers\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

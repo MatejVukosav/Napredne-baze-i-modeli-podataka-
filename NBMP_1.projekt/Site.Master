@@ -53,8 +53,6 @@
                         <li><a runat="server" href="~/Views/Add">Add</a></li>
                         <li><a runat="server" href="~/Views/Search">Search</a></li>
                         <li><a runat="server" href="~/Views/Analisys">Analisys</a></li>
-                        <li><a runat="server" href="~/Mongo/MongoPage">MongoPage</a></li>
-
 
                     </ul>
                 </div>
